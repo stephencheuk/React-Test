@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='UTF-8'>
+  </head>
+<body>
+<div id="root"></div>
+
+<script src='https://unpkg.com/babel-standalone@6/babel.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.js'></script>
+
+<!--
+link for compile to normal javascript
+https://babeljs.io/repl
+-->
+
+<script type="text/babel">
+
+'use strict';
+
+function Rows(props) {
+  return <td>{props.data}</td>
+}
+
+function Row(props) {
+//  console.log(props);
+  return (
+    <tr key={props.data.ID}>
+      <Rows data={props.data.Code} />
+      <Rows data={props.data.Name} />
+    </tr>
+  );
+}
+
+function RowHead(props) {
+//  console.log(props);
+  return <td className={props.data.className}>{props.data.name}</td>
+  
+}
+
+class MyTable extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      'head' : [
+        {'name':'Code', 'className':'c1'},
+        {'name':'Name', 'className':'c2'},
+      ],
+      'items' : data,
+    };
+  }
+
+  AddRow = () => {
+    //console.log(this.state);
+    var newstate = Object.assign({}, this.state);
+    console.log(newstate);
+    newstate.items.push({id:newstate.items.length+1, 'qty':1, 'price':0});
+    this.setState(newstate);
+  }
+
+  ItemChange = (idx, name, value) => {
+    var newstate = Object.assign({}, this.state);
+    if(newstate.items.length > idx && newstate.items[idx]){
+      newstate.items[idx][name] = value;
+      this.setState(newstate);
+    }
+  }
+
+  render(){
+    return (
+      <div>
+        <button onClick={this.AddRow}>Add Row</button>
+        <table border="0" cellpadding="0" cellspacing="0" className="MaxWidth MaxHeight Fixed">
+          <thead>
+            <tr>
+            { this.state.head.map((h, i) => <RowHead key={h.name} data={h} />) }
+            </tr>
+          </thead>
+          <tbody>
+            { this.state.items.map((h, i) => <Row key={h.ID} data={h} />) }
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <MyTable />,
+  document.getElementById('root')
+);
+</script>
+
+</body>
+</html>
